@@ -25,28 +25,36 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Get input and calculate speed
         x_move = Input.GetAxis("Horizontal")*spd*Time.deltaTime;
         z_move = Input.GetAxis("Vertical")*spd*Time.deltaTime;
- 
+        
+        //Put input into a Vector3
         currSpd = (transform.forward * z_move) + (transform.right *x_move);
         
+        //Apply Speed
         Capsule.Move(currSpd);
 
+        //Interaction
         if (Input.GetButton("Fire1"))
         {
             Debug.DrawRay(t_cam.position, t_cam.forward * 2, Color.red);
             RaycastHit hit;
+            //Fire a raycast and get the interactable's tag
             if (Physics.Raycast(t_cam.position, t_cam.forward, out hit))
             {
                 switch (hit.collider.tag) {
+                    //Toilet Interaction
                     case ("Toilet"):
                         TextBox.SetActive(true);
                         txt.text = "Toilet with top of the line spinning functionality!";
                         break;
+                    //Bed Interaction
                     case ("Bed"):
                         TextBox.SetActive(true);
                         txt.text = "A super comfy bed with tons of space for hiding your life savings!";
                         break;
+                    //Table Interaction
                     case ("Table"):
                         TextBox.SetActive(true);
                         txt.text = "This kitchen has all the fundamentals of a normal kitchen! (gas not included)";
@@ -57,6 +65,7 @@ public class Movement : MonoBehaviour
 
         LayerMask mask = LayerMask.GetMask("Interactable");
 
+        //Check if a text box is active and deactivate it if the player moves away from the interactable
         if (TextBox.activeSelf)
         {
             if (!Physics.CheckSphere(transform.position, 2, mask))
