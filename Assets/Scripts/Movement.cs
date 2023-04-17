@@ -14,6 +14,8 @@ public class Movement : MonoBehaviour
     public CharacterController Capsule;
     LayerMask mask;
     public Transform t_cam;
+    public GameObject Cursor;
+    public GameObject CursorSelect;
     public GameObject TextBox;
     public Text txt;
     // Start is called before the first frame update
@@ -36,7 +38,23 @@ public class Movement : MonoBehaviour
         Capsule.Move(currSpd);
 
         //Interaction
-        if (Input.GetButton("Fire1"))
+        LayerMask mask = LayerMask.GetMask("Interactable");
+
+        RaycastHit cursor;
+        if (Physics.Raycast(t_cam.position, t_cam.forward, out cursor))
+        {
+            if ((cursor.collider.tag == "Toilet") || (cursor.collider.tag == "Bed") || (cursor.collider.tag == "Table"))
+            {
+                Cursor.SetActive(false);
+                CursorSelect.SetActive(true);
+            } else
+            {
+                Cursor.SetActive(true);
+                CursorSelect.SetActive(false);
+            }
+        }
+
+            if (Input.GetButton("Fire1"))
         {
             Debug.DrawRay(t_cam.position, t_cam.forward * 2, Color.red);
             RaycastHit hit;
@@ -63,7 +81,10 @@ public class Movement : MonoBehaviour
             }
         }
 
-        LayerMask mask = LayerMask.GetMask("Interactable");
+        if (Input.GetButton("Fire2"))
+        {
+            TextBox.SetActive(false);
+        }
 
         //Check if a text box is active and deactivate it if the player moves away from the interactable
         if (TextBox.activeSelf)
