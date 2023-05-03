@@ -41,25 +41,31 @@ public class Movement : MonoBehaviour
         LayerMask mask = LayerMask.GetMask("Interactable");
 
         RaycastHit cursor;
-        if (Physics.Raycast(t_cam.position, t_cam.forward, out cursor))
+        if (Physics.Raycast(t_cam.position, t_cam.forward, out cursor, 3f))
         {
             if ((cursor.collider.tag == "Toilet") || (cursor.collider.tag == "Bed") || (cursor.collider.tag == "Table"))
             {
                 Cursor.SetActive(false);
                 CursorSelect.SetActive(true);
-            } else
+            }
+            else
             {
                 Cursor.SetActive(true);
                 CursorSelect.SetActive(false);
             }
         }
-
-            if (Input.GetButton("Fire1"))
+        else
         {
-            Debug.DrawRay(t_cam.position, t_cam.forward * 2, Color.red);
+            Cursor.SetActive(true);
+            CursorSelect.SetActive(false);
+        }
+
+        if (Input.GetButton("Fire1"))
+        {
+            Debug.DrawRay(t_cam.position, t_cam.forward, Color.red);
             RaycastHit hit;
             //Fire a raycast and get the interactable's tag
-            if (Physics.Raycast(t_cam.position, t_cam.forward, out hit))
+            if (Physics.Raycast(t_cam.position, t_cam.forward, out hit, 3f))
             {
                 switch (hit.collider.tag) {
                     //Toilet Interaction
@@ -89,10 +95,16 @@ public class Movement : MonoBehaviour
         //Check if a text box is active and deactivate it if the player moves away from the interactable
         if (TextBox.activeSelf)
         {
-            if (!Physics.CheckSphere(transform.position, 2, mask))
+            if ((!Physics.CheckSphere(transform.position, 3, mask)) || (Input.GetButton("Fire2")))
             {
                 TextBox.SetActive(false);
             }
+        }
+
+        //Closes the game
+        if (Input.GetKey("escape"))
+        {
+            Application.Quit();
         }
     }
 }
