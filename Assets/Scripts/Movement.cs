@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    int spd = 3;
+    int spd = 4;
     Vector3 currSpd = Vector3.zero;
 
     float x_move = 0f;
