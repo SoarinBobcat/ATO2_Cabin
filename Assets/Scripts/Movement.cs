@@ -18,6 +18,9 @@ public class Movement : MonoBehaviour
     public GameObject CursorSelect;
     public GameObject TextBox;
     public Text txt;
+    public AudioSource open;
+    public AudioSource close;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +63,7 @@ public class Movement : MonoBehaviour
             CursorSelect.SetActive(false);
         }
 
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             Debug.DrawRay(t_cam.position, t_cam.forward, Color.red);
             RaycastHit hit;
@@ -84,6 +87,7 @@ public class Movement : MonoBehaviour
                         txt.text = "This kitchen has all the fundamentals of a normal kitchen! (gas not included)";
                         break;
                 }
+                open.Play(0);
             }
         }
 
@@ -95,9 +99,10 @@ public class Movement : MonoBehaviour
         //Check if a text box is active and deactivate it if the player moves away from the interactable
         if (TextBox.activeSelf)
         {
-            if ((!Physics.CheckSphere(transform.position, 3, mask)) || (Input.GetButton("Fire2")))
+            if ((!Physics.CheckSphere(transform.position, 3, mask)) || (Input.GetButtonDown("Fire2")))
             {
                 TextBox.SetActive(false);
+                close.Play(0);
             }
         }
 
